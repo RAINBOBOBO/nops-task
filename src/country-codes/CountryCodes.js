@@ -1,9 +1,11 @@
 import React, { useContext, useState } from "react";
+import { handleInputChange } from "react-select/src/utils";
 import UserContext from "../auth/UserContext";
 
 function CountryCodes() {
   const [modalAIsOpen, setAIsOpen] = useState(false);
   const [modalBIsOpen, setBIsOpen] = useState(false);
+  const [isOnlyEven, setIsOnlyEven] = useState(false);
 
   function openModalA() {
     setAIsOpen(true);
@@ -16,6 +18,10 @@ function CountryCodes() {
   function closeModals() {
     setAIsOpen(false);
     setBIsOpen(false);
+  }
+
+  handleChange(evt) {
+    setIsOnlyEven(value => !value);
   }
 
   return (
@@ -46,6 +52,14 @@ function CountryCodes() {
         <button onClick={openModalA}>All country codes</button>
         <button onClick={openModalB}>Favorite country codes</button>
         <button onClick={closeModals}>Close</button>
+        <input
+          name="onlyEven"
+          type="checkbox"
+          checked={isOnlyEven}
+          onChange={handleChange}
+        >
+          Only Even
+        </input>
       </Modal>
 
       <Modal
