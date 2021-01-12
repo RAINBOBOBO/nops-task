@@ -1,4 +1,3 @@
-import './App.css';
 import React, { useEffect, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
 import UserContext from './auth/UserContext.js';
