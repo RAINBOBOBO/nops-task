@@ -18,7 +18,7 @@ class nopsTaskApi {
     console.debug("API Call:", endpoint, data, method);
 
     const url = `${BASE_URL}/${endpoint}`;
-    const headers = { Authorization: `Bearer ${JoblyApi.token}` };
+    const headers = { Authorization: `Bearer ${nopsTaskApi.token}` };
     const params = (method === "get")
         ? data
         : {};
@@ -57,4 +57,4 @@ class nopsTaskApi {
 }
 
 
-export default JoblyApi;
+export default nopsTaskApi;

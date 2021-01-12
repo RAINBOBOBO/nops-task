@@ -3,7 +3,8 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import Homepage from "../homepage/Homepage";
 import LoginForm from "../auth/LoginForm";
 import SignupForm from "../auth/SignupForm";
-import CountryCodes from "../country-codes/CountryCodes"
+import CountryCodes from "../country-codes/CountryCodes";
+import CountryCodeModal from "../custom-modals/CountryCodeModal";
 import PrivateRoute from "./PrivateRoute";
 
 /** Site-wide routes.
@@ -36,6 +37,10 @@ function Routes({ login, signup }) {
           <Route exact path="/signup">
             <SignupForm signup={signup} />
           </Route>
+
+          <PrivateRoute exact path="/codes/:modal">
+            <CountryCodeModal />
+          </PrivateRoute>
 
           <PrivateRoute exact path="/codes">
             <CountryCodes />
