@@ -15,11 +15,12 @@ import PrivateRoute from "./PrivateRoute";
  * Visiting a non-existant route redirects to the homepage.
  */
 
-function Routes({ login, signup }) {
+function Routes({ login, signup, addFavoriteCode }) {
   console.debug(
       "Routes",
       `login=${typeof login}`,
       `register=${typeof register}`,
+      `addFavoriteCode=${typeof addFavoriteCode}`,
   );
 
   return (
@@ -39,7 +40,7 @@ function Routes({ login, signup }) {
           </Route>
 
           <PrivateRoute exact path="/codes/:modal">
-            <CountryCodeModal />
+            <CountryCodeModal addFavoriteCode={addFavoriteCode} />
           </PrivateRoute>
 
           <PrivateRoute exact path="/codes">

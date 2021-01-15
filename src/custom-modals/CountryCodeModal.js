@@ -5,7 +5,7 @@ import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 import CountryList from "../country-codes/CountryList.js";
 
-function CountryCodeModal() {
+function CountryCodeModal({ addFavoriteCode }) {
   const history = useHistory();
   const [isOnlyEven, setIsOnlyEven] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
@@ -70,12 +70,14 @@ function CountryCodeModal() {
             <CountryList 
               allCountryCodes={evenCountryCodes} 
               loadedIndex={loadedIndex}
+              addFavoriteCode={addFavoriteCode}
           />);
         } else {
           return (
             <CountryList 
               allCountryCodes={allCountryCodes} 
               loadedIndex={loadedIndex}
+              addFavoriteCode={addFavoriteCode}
           />);
         }
       } else if (urlParam.modal === 'b') {

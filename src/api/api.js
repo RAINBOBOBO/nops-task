@@ -15,7 +15,7 @@ class nopsTaskApi {
   static token;
 
   static async request(endpoint, data = {}, method = "get") {
-    console.debug("API Call:", endpoint, data, method);
+    console.debug("API Call:", endpoint, data, method, BASE_URL);
 
     const url = `${BASE_URL}/${endpoint}`;
     const headers = { Authorization: `Bearer ${nopsTaskApi.token}` };
@@ -53,6 +53,13 @@ class nopsTaskApi {
   static async signup(data) {
     let res = await this.request(`auth/register`, data, "post");
     return res.token;
+  }
+
+  /** Favorite a code. */
+
+  static async addFavorite(username, countryCode) {
+    let res = await this.request(`users/${username}/favorites`, { countryCode }, "post");
+    return res.favorited;
   }
 }
 

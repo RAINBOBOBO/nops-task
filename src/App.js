@@ -81,6 +81,17 @@ function App() {
     }
   }
 
+  // Handles favorites.
+  async function addFavoriteCode(countryCode) {
+    try {
+      await nopsTaskApi.addFavorite(currentUser.username, countryCode);
+      return { success: true };
+    } catch (errors) {
+      console.error("add favorite failed", errors);
+      return { success: false, errors };
+    }
+  }
+
   if (!infoLoaded) return <LoadingSpinner />;
 
   return (
@@ -88,7 +99,7 @@ function App() {
       <UserContext.Provider value={{currentUser, setCurrentUser}}>
         <div className="App">
           <Navigation logout={logout} />
-          <Routes login={login} signup={signup} />
+          <Routes login={login} signup={signup} addFavoriteCode={addFavoriteCode} />
         </div>
       </UserContext.Provider>
     </BrowserRouter>
