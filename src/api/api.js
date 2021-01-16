@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
+const BASE_URL = "http://localhost:3001";
 
 /** API Class.
  *
@@ -15,7 +15,7 @@ class nopsTaskApi {
   static token;
 
   static async request(endpoint, data = {}, method = "get") {
-    console.debug("API Call:", endpoint, data, method, BASE_URL);
+    console.debug("API Call:", endpoint, data, method);
 
     const url = `${BASE_URL}/${endpoint}`;
     const headers = { Authorization: `Bearer ${nopsTaskApi.token}` };
@@ -53,6 +53,14 @@ class nopsTaskApi {
   static async signup(data) {
     let res = await this.request(`auth/register`, data, "post");
     return res.token;
+  }
+
+  /** Get all favorites for a user */
+
+  static async getFavorites(username) {
+    let res = await this.request(`users/${username}/favorites`);
+    // console.log("inside API file, getting faves", res.favorites);
+    return res.favorites;
   }
 
   /** Favorite a code. */

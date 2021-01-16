@@ -1,6 +1,6 @@
 import React from "react";
 
-function CountryList({ allCountryCodes, loadedIndex, addFavoriteCode }) {
+function CountryList({ countryCodes, loadedIndex, addFavoriteCode }) {
 
   function handleAddFavoriteCode(evt) {
     const countryCode = evt.target.getAttribute('name');
@@ -9,11 +9,11 @@ function CountryList({ allCountryCodes, loadedIndex, addFavoriteCode }) {
   }
 
   function renderCodes() {
-    // console.log("CountryList recieved", allCountryCodes)
-    const codesToRender = allCountryCodes
+    console.log("CountryList recieved", countryCodes);
+    const codesToRender = countryCodes
       .slice(0, loadedIndex)
       .map(country => country['alpha3Code']);
-    // console.log("CountryList rendering", codesToRender)
+    console.log("CountryList rendering", codesToRender);
     return codesToRender.map(code => 
       <li key={code} >
         <i 

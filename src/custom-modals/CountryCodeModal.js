@@ -1,19 +1,29 @@
 import "./CountryCodeModal.css"
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Modal from 'react-modal';
 import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 import CountryList from "../country-codes/CountryList.js";
+import nopsTaskApi from "../api/api";
+import UserContext from "../auth/UserContext";
+
+// binding modal to appElement for screen readers
+Modal.setAppElement('#root');
 
 function CountryCodeModal({ addFavoriteCode }) {
   const history = useHistory();
+
   const [isOnlyEven, setIsOnlyEven] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
-  const [allCountryCodes, setAllCountryCodes] = useState(null);
-  const [evenCountryCodes, setEvenCountryCodes] = useState(null);
   const [infoLoaded, setInfoLoaded] = useState(false);
   const [loadedIndex, setLoadedIndex] = useState(10);
+  const [allCountryCodes, setAllCountryCodes] = useState(null);
+  const [evenCountryCodes, setEvenCountryCodes] = useState(null);
+  const [userFavoriteCodes, setUserFavoriteCodes] = useState(null);
+
   const urlParam = useParams();
+
+  const { currentUser } = useContext(UserContext);
 
   useEffect(function loadCountryInfo() {
     // console.debug("CountryCodeModal useEffect loadCountryInfo");
@@ -28,6 +38,9 @@ function CountryCodeModal({ addFavoriteCode }) {
           (country, index) => index % 2 === 1
         );
         setEvenCountryCodes(evenCountryCodes);
+
+        const userFavoritesResult = await nopsTaskApi.getFavorites(currentUser.username);
+        setUserFavoriteCodes(userFavoritesResult);
 
       } catch (err) {
         console.error("CountryCodeModal loadCountryInfo: problem loading", err);
@@ -68,20 +81,26 @@ function CountryCodeModal({ addFavoriteCode }) {
         if (isOnlyEven) {
           return (
             <CountryList 
-              allCountryCodes={evenCountryCodes} 
+              countryCodes={evenCountryCodes} 
               loadedIndex={loadedIndex}
               addFavoriteCode={addFavoriteCode}
           />);
         } else {
           return (
             <CountryList 
-              allCountryCodes={allCountryCodes} 
+              countryCodes={allCountryCodes} 
               loadedIndex={loadedIndex}
               addFavoriteCode={addFavoriteCode}
           />);
         }
       } else if (urlParam.modal === 'b') {
         //TODO: display country list w/ user favorites
+        return (
+          <CountryList 
+              countryCodes={userFavoriteCodes} 
+              loadedIndex={loadedIndex}
+              addFavoriteCode={addFavoriteCode}
+          />);
       }
     } else {
       return null;
