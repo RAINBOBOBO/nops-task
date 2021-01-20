@@ -4,13 +4,13 @@ import Modal from 'react-modal';
 import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 import CountryList from "../country-codes/CountryList.js";
-import nopsTaskApi from "../api/api";
 import UserContext from "../auth/UserContext";
+import LoadingSpinner from "../common/LoadingSpinner.js";
 
 // binding modal to appElement for screen readers
 Modal.setAppElement('#root');
 
-function CountryCodeModal({ addFavoriteCode }) {
+function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
   const history = useHistory();
 
   const [isOnlyEven, setIsOnlyEven] = useState(false);
@@ -19,7 +19,6 @@ function CountryCodeModal({ addFavoriteCode }) {
   const [loadedIndex, setLoadedIndex] = useState(10);
   const [allCountryCodes, setAllCountryCodes] = useState(null);
   const [evenCountryCodes, setEvenCountryCodes] = useState(null);
-  const [userFavoriteCodes, setUserFavoriteCodes] = useState(null);
 
   const urlParam = useParams();
 
@@ -38,10 +37,6 @@ function CountryCodeModal({ addFavoriteCode }) {
           (country, index) => index % 2 === 1
         );
         setEvenCountryCodes(evenCountryCodes);
-
-        const userFavoritesResult = await nopsTaskApi.getFavorites(currentUser.username);
-        setUserFavoriteCodes(userFavoritesResult);
-
       } catch (err) {
         console.error("CountryCodeModal loadCountryInfo: problem loading", err);
       }
@@ -84,6 +79,7 @@ function CountryCodeModal({ addFavoriteCode }) {
               countryCodes={evenCountryCodes} 
               loadedIndex={loadedIndex}
               addFavoriteCode={addFavoriteCode}
+              removeFavoriteCode={removeFavoriteCode}
           />);
         } else {
           return (
@@ -91,19 +87,21 @@ function CountryCodeModal({ addFavoriteCode }) {
               countryCodes={allCountryCodes} 
               loadedIndex={loadedIndex}
               addFavoriteCode={addFavoriteCode}
+              removeFavoriteCode={removeFavoriteCode}
           />);
         }
       } else if (urlParam.modal === 'b') {
-        //TODO: display country list w/ user favorites
+        const userFavoriteCodes = ["favorites"];
         return (
           <CountryList 
               countryCodes={userFavoriteCodes} 
               loadedIndex={loadedIndex}
               addFavoriteCode={addFavoriteCode}
+              removeFavoriteCode={removeFavoriteCode}
           />);
       }
     } else {
-      return null;
+      return <LoadingSpinner />;
     }
   }
 

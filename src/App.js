@@ -92,6 +92,17 @@ function App() {
     }
   }
 
+  // Handles removing favorites.
+  async function removeFavoriteCode(countryCode) {
+    try {
+      await nopsTaskApi.removeFavorite(currentUser.username, countryCode);
+      return { success: true };
+    } catch (errors) {
+      console.error("add favorite failed", errors);
+      return { success: false, errors };
+    }
+  }
+
   if (!infoLoaded) return <LoadingSpinner />;
 
   return (
@@ -99,7 +110,12 @@ function App() {
       <UserContext.Provider value={{currentUser, setCurrentUser}}>
         <div className="App">
           <Navigation logout={logout} />
-          <Routes login={login} signup={signup} addFavoriteCode={addFavoriteCode} />
+          <Routes 
+            login={login} 
+            signup={signup} 
+            addFavoriteCode={addFavoriteCode} 
+            removeFavoriteCode={removeFavoriteCode}
+          />
         </div>
       </UserContext.Provider>
     </BrowserRouter>

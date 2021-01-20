@@ -69,6 +69,13 @@ class nopsTaskApi {
     let res = await this.request(`users/${username}/favorites`, { countryCode }, "post");
     return res.favorited;
   }
+
+  /** Un-favorite a code. */
+
+  static async removeFavorite(username, countryCode) {
+    let res = await this.request(`users/${username}/favorites`, { countryCode }, "delete");
+    return res.deleted;
+  }
 }
 
 

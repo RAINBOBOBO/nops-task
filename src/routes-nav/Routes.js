@@ -15,7 +15,7 @@ import PrivateRoute from "./PrivateRoute";
  * Visiting a non-existant route redirects to the homepage.
  */
 
-function Routes({ login, signup, addFavoriteCode }) {
+function Routes({ login, signup, addFavoriteCode, removeFavoriteCode }) {
   console.debug(
       "Routes",
       `login=${typeof login}`,
@@ -40,7 +40,10 @@ function Routes({ login, signup, addFavoriteCode }) {
           </Route>
 
           <PrivateRoute exact path="/codes/:modal">
-            <CountryCodeModal addFavoriteCode={addFavoriteCode} />
+            <CountryCodeModal 
+              addFavoriteCode={addFavoriteCode} 
+              removeFavoriteCode={removeFavoriteCode}
+            />
           </PrivateRoute>
 
           <PrivateRoute exact path="/codes">
