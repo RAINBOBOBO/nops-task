@@ -4,7 +4,6 @@ import Modal from 'react-modal';
 import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 import CountryList from "../country-codes/CountryList.js";
-import UserContext from "../auth/UserContext";
 import LoadingSpinner from "../common/LoadingSpinner.js";
 
 // binding modal to appElement for screen readers
@@ -21,8 +20,6 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
   const [evenCountryCodes, setEvenCountryCodes] = useState(null);
 
   const urlParam = useParams();
-
-  const { currentUser } = useContext(UserContext);
 
   useEffect(function loadCountryInfo() {
     // console.debug("CountryCodeModal useEffect loadCountryInfo");
@@ -43,7 +40,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
       setInfoLoaded(true);
     }
 
-    // set infoLoaded to false while async getCurrentUser runs; once the
+    // set infoLoaded to false while async getCountryCodes runs; once the
     // data is fetched (or even if an error happens!), this will be set back
     // to false to control the spinner.
     setInfoLoaded(false);
@@ -80,6 +77,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
               loadedIndex={loadedIndex}
               addFavoriteCode={addFavoriteCode}
               removeFavoriteCode={removeFavoriteCode}
+              isOnlyEven={isOnlyEven}
           />);
         } else {
           return (
@@ -88,6 +86,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
               loadedIndex={loadedIndex}
               addFavoriteCode={addFavoriteCode}
               removeFavoriteCode={removeFavoriteCode}
+              isOnlyEven={isOnlyEven}
           />);
         }
       } else if (urlParam.modal === 'b') {
@@ -98,6 +97,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
               loadedIndex={loadedIndex}
               addFavoriteCode={addFavoriteCode}
               removeFavoriteCode={removeFavoriteCode}
+              isOnlyEven={isOnlyEven}
           />);
       }
     } else {
@@ -129,6 +129,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
           </label>
         </form>
         {displayCountryCodes()}
+        <i>( Scroll down to load more codes )</i>
       </Modal>
     </div>
   )

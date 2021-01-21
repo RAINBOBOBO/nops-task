@@ -4,9 +4,11 @@ import UserContext from "../auth/UserContext";
 import { useParams } from "react-router-dom";
 import LoadingSpinner from "../common/LoadingSpinner.js";
 
-function CountryList({ countryCodes, loadedIndex, addFavoriteCode, removeFavoriteCode }) {
+function CountryList({ countryCodes, loadedIndex, addFavoriteCode, removeFavoriteCode, isOnlyEven }) {
   const [userFavoriteCodes, setUserFavoriteCodes] = useState(null);
+  const [userEvenFavoriteCodes, setUserEvenFavoriteCodes] = useState(null);
   const [infoLoaded, setInfoLoaded] = useState(false);
+  const [triggerRerender, setTriggerRerender] = useState(false);
 
   const { currentUser } = useContext(UserContext);
 
@@ -17,9 +19,14 @@ function CountryList({ countryCodes, loadedIndex, addFavoriteCode, removeFavorit
   useEffect(function loadUserFavorites() {
     async function getUserFavorites() {
       try {
-        console.log("fetching favorites inside CountryList");
+        // console.log("fetching favorites inside CountryList");
         const userFavoritesResult = await nopsTaskApi.getFavorites(currentUser.username);
-        setUserFavoriteCodes(userFavoritesResult);
+        setUserFavoriteCodes(userFavoritesResult.map(code => code["alpha3Code"]));
+
+        const evenFavoriteCodes = userFavoritesResult.filter(
+          (country, index) => index % 2 === 1
+        );
+        setUserEvenFavoriteCodes(evenFavoriteCodes);
       } catch (err) {
         console.error("CountryList Modal loadUserFavorites: problem loading", err);
       }
@@ -28,38 +35,63 @@ function CountryList({ countryCodes, loadedIndex, addFavoriteCode, removeFavorit
 
     setInfoLoaded(false);
     getUserFavorites();
-  }, [urlParam.modal]);
+  }, [urlParam.modal, triggerRerender]);
 
   function handleAddFavoriteCode(evt) {
     const countryCode = evt.target.getAttribute('name');
-    console.log("attempting to favorite code", countryCode);
     addFavoriteCode(countryCode);
+    setTriggerRerender(state => !state);
+  }
+
+  function handleRemoveFavoriteCode(evt) {
+    const countryCode = evt.target.getAttribute('name');
+    removeFavoriteCode(countryCode);
+    setTriggerRerender(state => !state);
   }
 
   function renderCodes() {
-    console.log("CountryList recieved", countryCodes);
+    // console.log("CountryList recieved", countryCodes);
     let codesToRender;
     if (infoLoaded) {
       if (countryCodes[0] === "favorites") {
-        codesToRender = userFavoriteCodes
-          .slice(0, loadedIndex)
-          .map(country => country['alpha3Code']);
+        if (isOnlyEven) {
+          codesToRender = userEvenFavoriteCodes
+            .slice(0, loadedIndex)
+            .map(country => country['alpha3Code']);
+        } else {
+          codesToRender = userFavoriteCodes.slice(0, loadedIndex);
+        }
       } else {
         codesToRender = countryCodes
           .slice(0, loadedIndex)
           .map(country => country['alpha3Code']);
       }
-      console.log("CountryList rendering", codesToRender);
 
-      return codesToRender.map(code => 
-        <li key={code} >
-          <i 
-            className="far fa-star"
-            onClick={handleAddFavoriteCode}
-            name={code}
-          />
-          {code}
-        </li> 
+      return codesToRender.map(code => {
+        if (userFavoriteCodes.includes(code)) {
+          return (
+            <li key={code} >
+              <i 
+                className="fas fa-star"
+                onClick={handleRemoveFavoriteCode}
+                name={code}
+              />
+              {code}
+            </li> 
+          )
+        } else {
+          return (
+            <li key={code} >
+              <i 
+                className="far fa-star"
+                onClick={handleAddFavoriteCode}
+                name={code}
+              />
+              {code}
+            </li> 
+          )
+        }
+      }
       );
     } else {
       return <LoadingSpinner />;
