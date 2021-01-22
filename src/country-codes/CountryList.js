@@ -35,7 +35,7 @@ function CountryList({ countryCodes, loadedIndex, addFavoriteCode, removeFavorit
 
     setInfoLoaded(false);
     getUserFavorites();
-  }, [urlParam.modal, triggerRerender]);
+  }, [urlParam.modal, triggerRerender, currentUser.username]);
 
   function handleAddFavoriteCode(evt) {
     const countryCode = evt.target.getAttribute('name');

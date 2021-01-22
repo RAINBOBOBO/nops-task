@@ -1,5 +1,5 @@
 import "./CountryCodeModal.css"
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from 'react-modal';
 import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
@@ -105,8 +105,9 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
     }
   }
 
+
   return (
-    <div>
+    <div className="modal-container">
       <Modal
         isOpen={isOpen}
         name="country-code-modal"
