@@ -75,6 +75,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
             <CountryList 
               countryCodes={evenCountryCodes} 
               loadedIndex={loadedIndex}
+              setLoadedIndex={setLoadedIndex}
               addFavoriteCode={addFavoriteCode}
               removeFavoriteCode={removeFavoriteCode}
               isOnlyEven={isOnlyEven}
@@ -84,6 +85,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
             <CountryList 
               countryCodes={allCountryCodes} 
               loadedIndex={loadedIndex}
+              setLoadedIndex={setLoadedIndex}
               addFavoriteCode={addFavoriteCode}
               removeFavoriteCode={removeFavoriteCode}
               isOnlyEven={isOnlyEven}
@@ -95,6 +97,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
           <CountryList 
               countryCodes={userFavoriteCodes} 
               loadedIndex={loadedIndex}
+              setLoadedIndex={setLoadedIndex}
               addFavoriteCode={addFavoriteCode}
               removeFavoriteCode={removeFavoriteCode}
               isOnlyEven={isOnlyEven}
@@ -130,7 +133,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
           </label>
         </form>
         {displayCountryCodes()}
-        <i>( Scroll down to load more codes )</i>
+        {infoLoaded && <i>( You've reached the end of the list! )</i>}
       </Modal>
     </div>
   )

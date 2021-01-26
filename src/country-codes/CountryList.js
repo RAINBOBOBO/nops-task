@@ -1,16 +1,36 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef, useCallback } from "react";
 import nopsTaskApi from "../api/api";
 import UserContext from "../auth/UserContext";
 import { useParams } from "react-router-dom";
 import LoadingSpinner from "../common/LoadingSpinner.js";
 
-function CountryList({ countryCodes, loadedIndex, addFavoriteCode, removeFavoriteCode, isOnlyEven }) {
+function CountryList({ 
+  countryCodes, 
+  loadedIndex, 
+  setLoadedIndex, 
+  addFavoriteCode, 
+  removeFavoriteCode, 
+  isOnlyEven,
+}) {
   const [userFavoriteCodes, setUserFavoriteCodes] = useState(null);
   const [userEvenFavoriteCodes, setUserEvenFavoriteCodes] = useState(null);
   const [infoLoaded, setInfoLoaded] = useState(false);
   const [triggerRerender, setTriggerRerender] = useState(false);
 
   const { currentUser } = useContext(UserContext);
+
+  const observer = useRef();
+
+  const lastCodeElementRef = useCallback(node => {
+    if (!infoLoaded) return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        setLoadedIndex(prevLoadedIndex => prevLoadedIndex + 10);
+      }
+    });
+    if (node) observer.current.observe(node);
+  }, [infoLoaded, setLoadedIndex]);
 
   const urlParam = useParams();
 
@@ -19,7 +39,6 @@ function CountryList({ countryCodes, loadedIndex, addFavoriteCode, removeFavorit
   useEffect(function loadUserFavorites() {
     async function getUserFavorites() {
       try {
-        // console.log("fetching favorites inside CountryList");
         const userFavoritesResult = await nopsTaskApi.getFavorites(currentUser.username);
         setUserFavoriteCodes(userFavoritesResult.map(code => code["alpha3Code"]));
 
@@ -67,26 +86,40 @@ function CountryList({ countryCodes, loadedIndex, addFavoriteCode, removeFavorit
           .map(country => country['alpha3Code']);
       }
 
-      return codesToRender.map(code => {
-        if (userFavoriteCodes.includes(code)) {
+      return codesToRender.map((code, index) => {
+        if ((index + 1) === loadedIndex) {
           return (
-            <li key={code} >
-              <i 
-                className="fas fa-star"
-                onClick={handleRemoveFavoriteCode}
-                name={code}
-              />
+            <li key={code} ref={lastCodeElementRef} >
+              {userFavoriteCodes.includes(code) && 
+                <i 
+                  className="fas fa-star"
+                  onClick={handleRemoveFavoriteCode}
+                  name={code}
+                />}
+              {!userFavoriteCodes.includes(code) && 
+                <i 
+                  className="far fa-star"
+                  onClick={handleAddFavoriteCode}
+                  name={code}
+                />}
               {code}
             </li> 
           )
         } else {
           return (
             <li key={code} >
-              <i 
-                className="far fa-star"
-                onClick={handleAddFavoriteCode}
-                name={code}
-              />
+              {userFavoriteCodes.includes(code) && 
+                <i 
+                  className="fas fa-star"
+                  onClick={handleRemoveFavoriteCode}
+                  name={code}
+                />}
+              {!userFavoriteCodes.includes(code) && 
+                <i 
+                  className="far fa-star"
+                  onClick={handleAddFavoriteCode}
+                  name={code}
+                />}
               {code}
             </li> 
           )
