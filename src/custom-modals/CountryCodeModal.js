@@ -5,6 +5,7 @@ import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 import CountryList from "../country-codes/CountryList.js";
 import LoadingSpinner from "../common/LoadingSpinner.js";
+import CountryDetailModal from "./CountryDetailModal.js";
 
 // binding modal to appElement for screen readers
 Modal.setAppElement('#root');
@@ -18,6 +19,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
   const [loadedIndex, setLoadedIndex] = useState(10);
   const [allCountryCodes, setAllCountryCodes] = useState(null);
   const [evenCountryCodes, setEvenCountryCodes] = useState(null);
+  const [codeToGetDetail, setCodeToGetDetail] = useState(null);
 
   const urlParam = useParams();
 
@@ -65,6 +67,10 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
     setIsOnlyEven(value => !value);
   }
 
+  function handleSetCodeForDetail(code) {
+    setCodeToGetDetail(code);
+  }
+
   function displayCountryCodes() {
     // render CountryList once info is loaded, pass allCountryCodes based on
     // url param
@@ -79,6 +85,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
               addFavoriteCode={addFavoriteCode}
               removeFavoriteCode={removeFavoriteCode}
               isOnlyEven={isOnlyEven}
+              setCode={handleSetCodeForDetail}
           />);
         } else {
           return (
@@ -89,6 +96,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
               addFavoriteCode={addFavoriteCode}
               removeFavoriteCode={removeFavoriteCode}
               isOnlyEven={isOnlyEven}
+              setCode={handleSetCodeForDetail}
           />);
         }
       } else if (urlParam.modal === 'b') {
@@ -101,6 +109,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
               addFavoriteCode={addFavoriteCode}
               removeFavoriteCode={removeFavoriteCode}
               isOnlyEven={isOnlyEven}
+              setCode={handleSetCodeForDetail}
           />);
       }
     } else {
@@ -111,6 +120,12 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
 
   return (
     <div className="modal-container">
+      {codeToGetDetail && 
+        <CountryDetailModal 
+          code={codeToGetDetail}
+          setCode={setCodeToGetDetail}
+        />
+      }
       <Modal
         isOpen={isOpen}
         name="country-code-modal"
@@ -136,7 +151,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
         {infoLoaded && <i>( You've reached the end of the list! )</i>}
       </Modal>
     </div>
-  )
+  );
 }
 
 export default CountryCodeModal;

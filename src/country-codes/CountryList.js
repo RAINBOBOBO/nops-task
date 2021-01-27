@@ -11,6 +11,7 @@ function CountryList({
   addFavoriteCode, 
   removeFavoriteCode, 
   isOnlyEven,
+  setCode,
 }) {
   const [userFavoriteCodes, setUserFavoriteCodes] = useState(null);
   const [userEvenFavoriteCodes, setUserEvenFavoriteCodes] = useState(null);
@@ -68,6 +69,11 @@ function CountryList({
     setTriggerRerender(state => !state);
   }
 
+  function handleSetCodeForDetail(evt) {
+    const countryCode = evt.target.getAttribute('name');
+    setCode(countryCode);
+  }
+
   function renderCodes() {
     // console.log("CountryList recieved", countryCodes);
     let codesToRender;
@@ -102,7 +108,14 @@ function CountryList({
                   onClick={handleAddFavoriteCode}
                   name={code}
                 />}
-              {code}
+              <button
+                type="button"
+                className="btn btn-link"
+                name={code}
+                onClick={handleSetCodeForDetail}
+              >
+                {code}
+              </button>
             </li> 
           )
         } else {
@@ -120,7 +133,14 @@ function CountryList({
                   onClick={handleAddFavoriteCode}
                   name={code}
                 />}
-              {code}
+              <button
+                type="button"
+                className="btn btn-link"
+                name={code}
+                onClick={handleSetCodeForDetail}
+              >
+                {code}
+              </button>
             </li> 
           )
         }
