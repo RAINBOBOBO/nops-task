@@ -87,6 +87,7 @@ function CountryList({
           codesToRender = userFavoriteCodes.slice(0, loadedIndex);
         }
       } else {
+        console.log("processing countryCodes now", countryCodes)
         codesToRender = countryCodes
           .slice(0, loadedIndex)
           .map(country => country['alpha3Code']);

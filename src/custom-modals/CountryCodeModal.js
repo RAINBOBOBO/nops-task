@@ -19,7 +19,10 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
   const [loadedIndex, setLoadedIndex] = useState(10);
   const [allCountryCodes, setAllCountryCodes] = useState(null);
   const [evenCountryCodes, setEvenCountryCodes] = useState(null);
+  const [searchedCountryCodes, setSearchedCountryCodes] = useState(null);
+  const [evenSearchedCountryCodes, setEvenSearchedCountryCodes] = useState(null);
   const [codeToGetDetail, setCodeToGetDetail] = useState(null);
+  const [formData, setFormData] = useState({ filterResults: ""});
 
   const urlParam = useParams();
 
@@ -32,10 +35,10 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
           `https://restcountries.eu/rest/v2/all?fields=name;alpha3Code`);
         setAllCountryCodes(allCountryCodesResult.data);
 
-        const evenCountryCodes = allCountryCodesResult.data.filter(
+        const evenCountryCodesResult = allCountryCodesResult.data.filter(
           (country, index) => index % 2 === 1
         );
-        setEvenCountryCodes(evenCountryCodes);
+        setEvenCountryCodes(evenCountryCodesResult);
       } catch (err) {
         console.error("CountryCodeModal loadCountryInfo: problem loading", err);
       }
@@ -48,6 +51,34 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
     setInfoLoaded(false);
     getCountryCodes();
   }, []);
+
+  useEffect( function searchCountryCodes() {
+    if (formData.filterResults) {
+      async function getCountryCodes() {
+        try {
+          const searchedCountryCodesResult = await axios.get(
+            `https://restcountries.eu/rest/v2/name/${formData.filterResults}`);
+          setSearchedCountryCodes(searchedCountryCodesResult.data);
+
+          const evenSearchedCountryCodesResult = searchedCountryCodesResult.data.filter(
+            (country, index) => index % 2 === 1
+          );
+          setEvenSearchedCountryCodes(evenSearchedCountryCodesResult);
+        } catch (err) {
+          if (err.message === "Request failed with status code 404") {
+            setSearchedCountryCodes([]);
+            setEvenSearchedCountryCodes([]);
+          } else {
+            console.error("CountryCodeModal searchCountryCodes: problem loading", err);
+          }
+        }
+        setInfoLoaded(true);
+      }
+
+      setInfoLoaded(false);
+      getCountryCodes();
+    }
+  }, [formData.filterResults]);
 
   function openModalA () {
     history.push("/codes/a");
@@ -63,8 +94,13 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
     history.push("/codes");
   }
 
-  function handleChange(evt) {
+  function handleCheckboxChange(evt) {
     setIsOnlyEven(value => !value);
+  }
+
+  function handleSearchboxChange(evt) {
+    const { name, value } = evt.target;
+    setFormData(data => ({ ...data, [name]: value }));
   }
 
   function handleSetCodeForDetail(code) {
@@ -76,29 +112,42 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
     // url param
     if (infoLoaded) {
       if (urlParam.modal === 'a') {
+        let codesToSend;
         if (isOnlyEven) {
-          return (
-            <CountryList 
-              countryCodes={evenCountryCodes} 
-              loadedIndex={loadedIndex}
-              setLoadedIndex={setLoadedIndex}
-              addFavoriteCode={addFavoriteCode}
-              removeFavoriteCode={removeFavoriteCode}
-              isOnlyEven={isOnlyEven}
-              setCode={handleSetCodeForDetail}
-          />);
+          if (formData.filterResults && evenSearchedCountryCodes) {
+            const matchingCodes = evenCountryCodes.filter(code => {
+              if (code['alpha3Code'].toLowerCase().includes(formData.filterResults.toLowerCase())) {
+                return code;
+              }
+            });
+            codesToSend = matchingCodes.concat(evenSearchedCountryCodes);
+            console.log("codesToSend is", codesToSend);
+          } else {
+            codesToSend = evenCountryCodes;
+          }
         } else {
-          return (
-            <CountryList 
-              countryCodes={allCountryCodes} 
-              loadedIndex={loadedIndex}
-              setLoadedIndex={setLoadedIndex}
-              addFavoriteCode={addFavoriteCode}
-              removeFavoriteCode={removeFavoriteCode}
-              isOnlyEven={isOnlyEven}
-              setCode={handleSetCodeForDetail}
-          />);
+          if (formData.filterResults && searchedCountryCodes) {
+            const matchingCodes = allCountryCodes.filter(code => {
+              if (code['alpha3Code'].toLowerCase().includes(formData.filterResults.toLowerCase())) {
+                return code;
+              }
+            });
+            codesToSend = matchingCodes.concat(searchedCountryCodes);
+            console.log("codesToSend is", codesToSend, matchingCodes, searchedCountryCodes);
+          } else {
+            codesToSend = allCountryCodes;
+          }
         }
+        return (
+          <CountryList 
+            countryCodes={codesToSend} 
+            loadedIndex={loadedIndex}
+            setLoadedIndex={setLoadedIndex}
+            addFavoriteCode={addFavoriteCode}
+            removeFavoriteCode={removeFavoriteCode}
+            isOnlyEven={isOnlyEven}
+            setCode={handleSetCodeForDetail}
+        />);
       } else if (urlParam.modal === 'b') {
         const userFavoriteCodes = ["favorites"];
         return (
@@ -133,19 +182,29 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
         onRequestClose={closeModals}
       >
         <h2>Modal {urlParam.modal.toUpperCase()}</h2>
+
         <button onClick={openModalA}>All country codes</button>
         <button onClick={openModalB}>Favorite country codes</button>
         <button onClick={closeModals}>Close</button>
         <form>
-          <label>
-            Only Even
+          <div>
+            <label>Only Even</label>
             <input
               name="onlyEven"
               type="checkbox"
               checked={isOnlyEven}
-              onChange={handleChange}
-            ></input>
-          </label>
+              onChange={handleCheckboxChange}
+            />
+          </div>
+          <div>
+            <label>Filter Results</label>
+            <input
+              name="filterResults"
+              className="form-control"
+              value={formData.filterResults}
+              onChange={handleSearchboxChange}
+            />
+          </div>
         </form>
         {displayCountryCodes()}
         {infoLoaded && <i>( You've reached the end of the list! )</i>}
