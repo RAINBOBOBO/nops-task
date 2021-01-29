@@ -27,7 +27,7 @@ function CountryList({
     if (observer.current) observer.current.disconnect();
     observer.current = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) {
-        setLoadedIndex(prevLoadedIndex => prevLoadedIndex + 10);
+        setLoadedIndex();
       }
     });
     if (node) observer.current.observe(node);
@@ -86,8 +86,14 @@ function CountryList({
         } else {
           codesToRender = userFavoriteCodes.slice(0, loadedIndex);
         }
+        if (countryCodes[1]) {
+          codesToRender = codesToRender.filter(code => {
+            if (code.toLowerCase().includes(countryCodes[1].toLowerCase())) {
+              return code;
+            }
+          });
+        }
       } else {
-        console.log("processing countryCodes now", countryCodes)
         codesToRender = countryCodes
           .slice(0, loadedIndex)
           .map(country => country['alpha3Code']);

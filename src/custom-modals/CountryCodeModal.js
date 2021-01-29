@@ -10,6 +10,8 @@ import CountryDetailModal from "./CountryDetailModal.js";
 // binding modal to appElement for screen readers
 Modal.setAppElement('#root');
 
+const countryCodeAPI = "https://restcountries.eu/rest/v2"
+
 function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
   const history = useHistory();
 
@@ -19,9 +21,8 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
   const [loadedIndex, setLoadedIndex] = useState(10);
   const [allCountryCodes, setAllCountryCodes] = useState(null);
   const [evenCountryCodes, setEvenCountryCodes] = useState(null);
-  const [searchedCountryCodes, setSearchedCountryCodes] = useState(null);
-  const [evenSearchedCountryCodes, setEvenSearchedCountryCodes] = useState(null);
   const [codeToGetDetail, setCodeToGetDetail] = useState(null);
+  const [searchedCode, setSearchedCode] = useState(null);
   const [formData, setFormData] = useState({ filterResults: ""});
 
   const urlParam = useParams();
@@ -32,8 +33,8 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
     async function getCountryCodes() {
       try {
         const allCountryCodesResult = await axios.get(
-          `https://restcountries.eu/rest/v2/all?fields=name;alpha3Code`);
-        setAllCountryCodes(allCountryCodesResult.data);
+          `${countryCodeAPI}/all?fields=name;alpha3Code`);
+        setAllCountryCodes(allCountryCodesResult.data.slice(0, loadedIndex));
 
         const evenCountryCodesResult = allCountryCodesResult.data.filter(
           (country, index) => index % 2 === 1
@@ -50,33 +51,26 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
     // to false to control the spinner.
     setInfoLoaded(false);
     getCountryCodes();
-  }, []);
+  }, [loadedIndex]);
 
-  useEffect( function searchCountryCodes() {
-    if (formData.filterResults) {
-      async function getCountryCodes() {
+  useEffect(function searchByCode() {
+    if (formData.filterResults.length > 1) {
+      async function getCountryCode() {
         try {
-          const searchedCountryCodesResult = await axios.get(
-            `https://restcountries.eu/rest/v2/name/${formData.filterResults}`);
-          setSearchedCountryCodes(searchedCountryCodesResult.data);
-
-          const evenSearchedCountryCodesResult = searchedCountryCodesResult.data.filter(
-            (country, index) => index % 2 === 1
-          );
-          setEvenSearchedCountryCodes(evenSearchedCountryCodesResult);
+          const searchResult = await axios.get(
+            `${countryCodeAPI}/alpha?codes=${formData.filterResults}`);
+          setSearchedCode(searchResult.data);
         } catch (err) {
           if (err.message === "Request failed with status code 404") {
-            setSearchedCountryCodes([]);
-            setEvenSearchedCountryCodes([]);
+            setSearchedCode(null);
           } else {
             console.error("CountryCodeModal searchCountryCodes: problem loading", err);
           }
         }
         setInfoLoaded(true);
       }
-
       setInfoLoaded(false);
-      getCountryCodes();
+      getCountryCode();
     }
   }, [formData.filterResults]);
 
@@ -107,6 +101,14 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
     setCodeToGetDetail(code);
   }
 
+  function handleSubmit(evt) {
+    evt.preventDefault();
+  }
+
+  function increaseLoadedIndex() {
+    setLoadedIndex(prevLoadedIndex => prevLoadedIndex + 10);
+  }
+
   function displayCountryCodes() {
     // render CountryList once info is loaded, pass allCountryCodes based on
     // url param
@@ -114,26 +116,34 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
       if (urlParam.modal === 'a') {
         let codesToSend;
         if (isOnlyEven) {
-          if (formData.filterResults && evenSearchedCountryCodes) {
-            const matchingCodes = evenCountryCodes.filter(code => {
+          if (formData.filterResults) {
+            codesToSend = evenCountryCodes.filter(code => {
               if (code['alpha3Code'].toLowerCase().includes(formData.filterResults.toLowerCase())) {
                 return code;
               }
             });
-            codesToSend = matchingCodes.concat(evenSearchedCountryCodes);
-            console.log("codesToSend is", codesToSend);
+            if (codesToSend.length === 0 
+                && formData.filterResults.length === 3 
+                && searchedCode !== null 
+                && searchedCode[0] !== null) {
+              codesToSend = searchedCode;
+            }
           } else {
             codesToSend = evenCountryCodes;
           }
         } else {
-          if (formData.filterResults && searchedCountryCodes) {
-            const matchingCodes = allCountryCodes.filter(code => {
+          if (formData.filterResults) {
+            codesToSend = allCountryCodes.filter(code => {
               if (code['alpha3Code'].toLowerCase().includes(formData.filterResults.toLowerCase())) {
                 return code;
               }
             });
-            codesToSend = matchingCodes.concat(searchedCountryCodes);
-            console.log("codesToSend is", codesToSend, matchingCodes, searchedCountryCodes);
+            if (codesToSend.length === 0 
+                && formData.filterResults.length > 1 
+                && searchedCode !== null 
+                && searchedCode[0] !== null) {
+              codesToSend = searchedCode;
+            }
           } else {
             codesToSend = allCountryCodes;
           }
@@ -142,19 +152,19 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
           <CountryList 
             countryCodes={codesToSend} 
             loadedIndex={loadedIndex}
-            setLoadedIndex={setLoadedIndex}
+            setLoadedIndex={increaseLoadedIndex}
             addFavoriteCode={addFavoriteCode}
             removeFavoriteCode={removeFavoriteCode}
             isOnlyEven={isOnlyEven}
             setCode={handleSetCodeForDetail}
         />);
       } else if (urlParam.modal === 'b') {
-        const userFavoriteCodes = ["favorites"];
+        const userFavoriteCodes = ["favorites", formData.filterResults];
         return (
           <CountryList 
               countryCodes={userFavoriteCodes} 
               loadedIndex={loadedIndex}
-              setLoadedIndex={setLoadedIndex}
+              setLoadedIndex={increaseLoadedIndex}
               addFavoriteCode={addFavoriteCode}
               removeFavoriteCode={removeFavoriteCode}
               isOnlyEven={isOnlyEven}
@@ -186,7 +196,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
         <button onClick={openModalA}>All country codes</button>
         <button onClick={openModalB}>Favorite country codes</button>
         <button onClick={closeModals}>Close</button>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div>
             <label>Only Even</label>
             <input
