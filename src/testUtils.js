@@ -9,8 +9,8 @@ const demoUser = {
 };
 
 const UserProvider =
-    ({ children, currentUser = demoUser, hasAppliedToJob = () => false }) => (
-    <UserContext.Provider value={{ currentUser, hasAppliedToJob }}>
+    ({ children, currentUser = demoUser}) => (
+    <UserContext.Provider value={{ currentUser }}>
       {children}
     </UserContext.Provider>
 );

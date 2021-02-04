@@ -75,7 +75,7 @@ function CountryList({
   }
 
   function renderCodes() {
-    // console.log("CountryList recieved", countryCodes);
+    console.log("CountryList recieved", countryCodes);
     let codesToRender;
     if (infoLoaded) {
       if (countryCodes[0] === "favorites") {
@@ -160,7 +160,7 @@ function CountryList({
 
   return (
     <div>
-      <ul>
+      <ul data-testid="country-list">
         {renderCodes()}
       </ul>
     </div>

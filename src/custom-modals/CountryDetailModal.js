@@ -4,7 +4,7 @@ import LoadingSpinner from "../common/LoadingSpinner.js";
 import axios from "axios";
 
 // binding modal to appElement for screen readers
-Modal.setAppElement('#root');
+// Modal.setAppElement('#root');
 
 function CountryDetailModal({ code, setCode }) {
   const [isOpen, setIsOpen] = useState(true);

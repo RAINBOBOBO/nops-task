@@ -24,11 +24,12 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
   const [codeToGetDetail, setCodeToGetDetail] = useState(null);
   const [searchedCode, setSearchedCode] = useState(null);
   const [formData, setFormData] = useState({ filterResults: ""});
+  const [modalId, setModalId] = useState("country-code-modal");
 
   const urlParam = useParams();
 
   useEffect(function loadCountryInfo() {
-    // console.debug("CountryCodeModal useEffect loadCountryInfo");
+    console.debug("CountryCodeModal useEffect loadCountryInfo");
 
     async function getCountryCodes() {
       try {
@@ -43,6 +44,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
       } catch (err) {
         console.error("CountryCodeModal loadCountryInfo: problem loading", err);
       }
+      console.log("got country codes in useEffect.")
       setInfoLoaded(true);
     }
 
@@ -54,6 +56,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
   }, [loadedIndex]);
 
   useEffect(function searchByCode() {
+    console.debug("CountryCodeModal useEffect searchByCode");
     if (formData.filterResults.length > 1) {
       async function getCountryCode() {
         try {
@@ -157,6 +160,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
             removeFavoriteCode={removeFavoriteCode}
             isOnlyEven={isOnlyEven}
             setCode={handleSetCodeForDetail}
+            data-testid="modal-a"
         />);
       } else if (urlParam.modal === 'b') {
         const userFavoriteCodes = ["favorites", formData.filterResults];
@@ -169,6 +173,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
               removeFavoriteCode={removeFavoriteCode}
               isOnlyEven={isOnlyEven}
               setCode={handleSetCodeForDetail}
+              data-testid="modal-b"
           />);
       }
     } else {
@@ -178,7 +183,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
 
 
   return (
-    <div className="modal-container">
+    <div className="modal-container" data-testid="modal-container" >
       {codeToGetDetail && 
         <CountryDetailModal 
           code={codeToGetDetail}
@@ -187,37 +192,50 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
       }
       <Modal
         isOpen={isOpen}
-        name="country-code-modal"
         className="modal"
         onRequestClose={closeModals}
       >
-        <h2>Modal {urlParam.modal.toUpperCase()}</h2>
+        <div className={"country-code-modal-" + urlParam.modal} >
+          <h2>Modal {urlParam.modal?.toUpperCase()}</h2>
 
-        <button onClick={openModalA}>All country codes</button>
-        <button onClick={openModalB}>Favorite country codes</button>
-        <button onClick={closeModals}>Close</button>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>Only Even</label>
-            <input
-              name="onlyEven"
-              type="checkbox"
-              checked={isOnlyEven}
-              onChange={handleCheckboxChange}
-            />
-          </div>
-          <div>
-            <label>Filter Results</label>
-            <input
-              name="filterResults"
-              className="form-control"
-              value={formData.filterResults}
-              onChange={handleSearchboxChange}
-            />
-          </div>
-        </form>
-        {displayCountryCodes()}
-        {infoLoaded && <i>( You've reached the end of the list! )</i>}
+          <button 
+            onClick={openModalA} 
+            className="buttonA" 
+            data-testid="modal-button-a" 
+          >All country codes</button>
+          <button 
+            onClick={openModalB} 
+            className="buttonB" 
+            data-testid="modal-button-b" 
+          >Favorite country codes</button>
+          <button 
+            onClick={closeModals} 
+            className="buttonC"
+            data-testid="modal-button-close" 
+          >Close</button>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label>Only Even</label>
+              <input
+                name="onlyEven"
+                type="checkbox"
+                checked={isOnlyEven}
+                onChange={handleCheckboxChange}
+              />
+            </div>
+            <div>
+              <label>Filter Results</label>
+              <input
+                name="filterResults"
+                className="form-control"
+                value={formData.filterResults}
+                onChange={handleSearchboxChange}
+              />
+            </div>
+          </form>
+          {displayCountryCodes()}
+          {infoLoaded && <i>( You've reached the end of the list! )</i>}
+        </div>
       </Modal>
     </div>
   );

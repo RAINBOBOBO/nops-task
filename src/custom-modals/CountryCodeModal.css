@@ -2,3 +2,16 @@
   max-height: 100%;
   overflow-y: scroll;
 }
+
+.country-code-modal-a {
+  background-color: #46139f
+}
+
+.country-code-modal-b {
+  background-color: #ff7f50
+}
+
+.buttonC {
+  background-color: white;
+  border-color:  #46139f;
+}

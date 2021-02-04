@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import "./CountryCodes.css"
 
 function CountryCodes() {
   const history = useHistory();
@@ -15,17 +16,19 @@ function CountryCodes() {
   return (
     <div>
       <button
-        className="btn btn-primary"
         name="buttonA"
+        className="buttonA"
         onClick={openModalA}
+        data-testid="button-a"
       >
         Button A
       </button>
 
       <button
-        className="btn btn-primary"
         name="buttonB"
+        className="buttonB"
         onClick={openModalB}
+        data-testid="button-b"
       >
         Button B
       </button>

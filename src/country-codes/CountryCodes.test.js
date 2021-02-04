@@ -1,5 +1,5 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
 import CountryCodes from "./CountryCodes";
 import { MemoryRouter } from "react-router";
 
@@ -11,3 +11,4 @@ it("matches snapshot", function () {
   );
   expect(asFragment()).toMatchSnapshot();
 });
+
