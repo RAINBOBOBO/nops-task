@@ -8,9 +8,42 @@ import LoadingSpinner from "../common/LoadingSpinner.js";
 import CountryDetailModal from "./CountryDetailModal.js";
 
 // binding modal to appElement for screen readers
-Modal.setAppElement('#root');
+if (process.env.NODE_ENV !== "test") Modal.setAppElement('#root');
 
 const countryCodeAPI = "https://restcountries.eu/rest/v2"
+
+
+/** CountryCodeModal
+ * 
+ *  Makes country code API requests for country code data and holds necessary 
+ *  data for other components to be rendered.
+ * 
+ *  Props:
+ *    - addFavoriteCode: fn passed from app to send code data to backend API 
+ *        whenever the add favorite button is pressed.
+ *    - removeFavoriteCode: fn passed from app to send code data to backend API 
+ *        whenever the remove favorite button is pressed.
+ * 
+ *  State:
+ *    - isOnlyEven: boolean to determine whether or not component will render
+ *        only the even indexed codes.
+ *    - isOpen: boolean to determine whether or not the modal should be open,
+ *        required for the Modal component
+ *    - infoLoaded: boolean to know when to show a loading message or when to
+ *        render the list of country codes.
+ *    - loadedIndex: int amount of codes to render
+ *    - allCountryCodes: array of codes to render
+ *    - evenCountryCodes: array to keep track of the even numbered indexes of 
+ *        the country codes gotten from country code API.
+ *    - codeToGetDetail: string to send to CountryDetailModal so it knows what
+ *        country to get details on.
+ *    - searchedCode: array to hold searched country data w/ country code API
+ *    - formData: object to handle the search box changes.
+ * 
+ *  Routed at /codes/:modal where :modal is "a" or "b"
+ * 
+ *  Routes --> CountryCodeModal --> {CountryList, CountryDetailModal}
+ */
 
 function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
   const history = useHistory();
@@ -24,7 +57,6 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
   const [codeToGetDetail, setCodeToGetDetail] = useState(null);
   const [searchedCode, setSearchedCode] = useState(null);
   const [formData, setFormData] = useState({ filterResults: ""});
-  const [modalId, setModalId] = useState("country-code-modal");
 
   const urlParam = useParams();
 

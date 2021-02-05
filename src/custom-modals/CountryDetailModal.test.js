@@ -1,15 +1,12 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import CountryCodeModal from "./CountryCodeModal";
+import CountryDetailModal from "./CountryDetailModal";
 import { MemoryRouter } from "react-router";
 
 it("matches snapshot", function () {
   const { asFragment } = render(
       <MemoryRouter>
-        <CountryCodeModal 
-          addFavoriteCode={() => {}}
-          removeFavoriteCode={() => {}}
-        />
+        <CountryDetailModal />
       </MemoryRouter>,
   );
   expect(asFragment()).toMatchSnapshot();

@@ -4,6 +4,42 @@ import UserContext from "../auth/UserContext";
 import { useParams } from "react-router-dom";
 import LoadingSpinner from "../common/LoadingSpinner.js";
 
+/** CountryList
+ * 
+ *  Renders a generic list of country codes and makes a request to the backend 
+ *  API for user favorites.
+ * 
+ *  Props:
+ *    - countryCodes: array of codes to render. If loading favorites, array will 
+ *        only have ["favorites", searchTerm] and component will make request to
+ *        backend API for the list of codes.
+ *    - loadedIndex: int amount of codes to render
+ *    - setLoadedIndex: fn used to change the number of codes to render when 
+ *        reaching the bottom of the page.
+ *    - addFavoriteCode: fn passed from app to send code data to backend API 
+ *        whenever the add favorite button is pressed.
+ *    - removeFavoriteCode: fn passed from app to send code data to backend API 
+ *        whenever the remove favorite button is pressed.
+ *    - isOnlyEven: boolean to determine whether or not component will render
+ *        only the even indexed codes.
+ *    - setCode: fn passed from CountryCodeModal to know which code to get 
+ *        details for when a code is clicked on.
+ * 
+ *  State:
+ *    - userFavoriteCodes: array to keep track of the user's favorite codes when
+ *        a request is made to the backend API.
+ *    - userEvenFavoriteCodes: array to keep track of the even numbered indexes
+ *        of the user's favorite codes.
+ *    - infoLoaded: boolean to know when to show a loading message or when to
+ *        render the list of country codes.
+ *    - triggerRerender: boolean to know when to re-render the list. I used this
+ *        solution because the page wouldn't show when a favorite was added 
+ *        unless I re-rendered the page. Not the cleanest solution but it works
+ *        for now. In a real world application I would ask for help on this.
+ * 
+ *  CountryCodeModal --> CountryList
+ */
+
 function CountryList({ 
   countryCodes, 
   loadedIndex, 

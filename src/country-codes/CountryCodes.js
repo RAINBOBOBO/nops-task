@@ -2,6 +2,16 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import "./CountryCodes.css"
 
+/** CountryCodes
+ * 
+ *  Renders buttons that redirect to /codes/a or /codes/b depending on which
+ *  button is pressed.
+ * 
+ *  Routed at /codes
+ * 
+ *  Routes --> CountryCodes
+ */
+
 function CountryCodes() {
   const history = useHistory();
 

@@ -4,7 +4,26 @@ import LoadingSpinner from "../common/LoadingSpinner.js";
 import axios from "axios";
 
 // binding modal to appElement for screen readers
-// Modal.setAppElement('#root');
+if (process.env.NODE_ENV !== "test") Modal.setAppElement('#root');
+
+
+/** CountryDetailModal
+ * 
+ *  Renders details on a specific country
+ * 
+ *  Props:
+ *    - code: string to keep track of what country to get details on
+ *    - setCode: fn to set code to null on modal close
+ * 
+ *  State:
+ *    - isOpen: boolean to determine whether or not the modal should be open,
+ *        required for the Modal component
+ *    - codeDetail: object to remember data from country code API request.
+ *    - infoLoaded: boolean to know when to show a loading message or when to
+ *        render the details of country code.
+ * 
+ *  CountryCodeModal --> CountryDetailModal
+ */
 
 function CountryDetailModal({ code, setCode }) {
   const [isOpen, setIsOpen] = useState(true);

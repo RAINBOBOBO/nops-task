@@ -4,14 +4,14 @@ exports[`matches snapshot 1`] = `
 <DocumentFragment>
   <div>
     <button
-      class="btn btn-primary"
+      class="buttonA"
       data-testid="button-a"
       name="buttonA"
     >
       Button A
     </button>
     <button
-      class="btn btn-primary"
+      class="buttonB"
       data-testid="button-b"
       name="buttonB"
     >
