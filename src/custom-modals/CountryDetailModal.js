@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Modal from 'react-modal';
 import LoadingSpinner from "../common/LoadingSpinner.js";
 import axios from "axios";
-
-// binding modal to appElement for screen readers
-if (process.env.NODE_ENV !== "test") Modal.setAppElement('#root');
+import { Modal } from "semantic-ui-react";
 
 
 /** CountryDetailModal
@@ -54,10 +51,10 @@ function CountryDetailModal({ code, setCode }) {
   return (
     <div>
       <Modal
-        isOpen={isOpen}
+        open={isOpen}
         name="country-code-detail-modal"
         className="detail-modal"
-        onRequestClose={closeModals}
+        onClose={closeModals}
       >
         <h2>Modal C: Details on {code}</h2>
         <button onClick={closeModals}>Close</button>

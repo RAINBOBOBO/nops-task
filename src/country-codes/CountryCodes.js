@@ -1,6 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import "./CountryCodes.css"
+import "./CountryCodes.css";
+import { Button, Container, Segment, Header } from 'semantic-ui-react';
 
 /** CountryCodes
  * 
@@ -24,25 +25,35 @@ function CountryCodes() {
   }
 
   return (
-    <div>
-      <button
-        name="buttonA"
-        className="buttonA"
-        onClick={openModalA}
-        data-testid="button-a"
-      >
-        Button A
-      </button>
+    <Segment id="CountryCodes-segment" vertical>
+      <Container id="CountryCodes-header-container" text>
+        <Header as="h3" id="CountryCodes-header1">
+          Button A to view all country codes
+        </Header>
+        <Header as="h3" id="CountryCodes-header2">
+          Button B to view favorite country codes
+        </Header>
+      </Container>
+      <Container text>
+        <Button
+          basic
+          color='purple'
+          onClick={openModalA}
+          data-testid="button-a"
+        >
+          Button A
+        </Button>
 
-      <button
-        name="buttonB"
-        className="buttonB"
-        onClick={openModalB}
-        data-testid="button-b"
-      >
-        Button B
-      </button>
-    </div>
+        <Button
+          basic
+          color='orange'
+          onClick={openModalB}
+          data-testid="button-b"
+        >
+          Button B
+        </Button>
+      </Container>
+    </Segment>
   );
 }
 

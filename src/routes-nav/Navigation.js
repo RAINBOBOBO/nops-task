@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { Segment, Menu, Container } from 'semantic-ui-react';
 import UserContext from "../auth/UserContext";
+import CountryCodes from "../country-codes/CountryCodes";
 import "./Navigation.css";
 
 /** Navigation bar for site. Shows up on every page.
@@ -17,40 +19,52 @@ function Navigation({ logout }) {
 
   function loggedInNav() {
     return (
-        <ul className="navbar-nav ml-auto">
-          <li className="nav-item">
-            <Link className="nav-link" to="/" onClick={logout}>
-              Log out {currentUser.first_name || currentUser.username}
-            </Link>
-          </li>
-        </ul>
+        <Menu.Item position="right">
+          <Link className="nav-link" to="/" onClick={logout}>
+            Log out {currentUser.first_name || currentUser.username}
+          </Link>
+        </Menu.Item>
     );
   }
 
   function loggedOutNav() {
     return (
-        <ul className="navbar-nav ml-auto">
-          <li className="nav-item mr-4">
-            <NavLink className="nav-link" to="/login">
-              Login
-            </NavLink>
-          </li>
-          <li className="nav-item mr-4">
-            <NavLink className="nav-link" to="/signup">
-              Sign Up
-            </NavLink>
-          </li>
-        </ul>
+      <>
+      <Menu.Item position="right">
+        <NavLink id="login-link" to="/login">
+          Login
+        </NavLink>
+      </Menu.Item>
+      <Menu.Item>
+        <NavLink id="signup-link" to="/signup">
+          Sign Up
+        </NavLink>
+      </Menu.Item>
+      </>
     );
   }
 
   return (
-      <nav className="Navigation navbar navbar-expand-md">
-        <Link className="navbar-brand" to="/codes">
-          Country Codes
-        </Link>
-        {currentUser ? loggedInNav() : loggedOutNav()}
-      </nav>
+      <Segment
+        inverted
+        vertical
+        textAlign="center"
+        id="nav-segment"
+      >
+        <Menu
+          fixed="top"
+          inverted
+        >
+          <Container>
+            <Menu.Item>
+              <Link className="navbar-brand" to="/codes">
+                Country Codes
+              </Link>
+            </Menu.Item>
+            {currentUser ? loggedInNav() : loggedOutNav()}
+          </Container>
+        </Menu>
+      </Segment>
   );
 }
 

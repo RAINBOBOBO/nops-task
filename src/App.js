@@ -7,6 +7,7 @@ import nopsTaskApi from './api/api.js';
 import LoadingSpinner from './common/LoadingSpinner.js';
 import useLocalStorage from "./hooks/useLocalStorage";
 import jwt from "jsonwebtoken";
+import 'semantic-ui-css/semantic.min.css';
 
 // Key name for storing token in localStorage for "remember me" re-login
 export const TOKEN_STORAGE_ID = "nops-token";

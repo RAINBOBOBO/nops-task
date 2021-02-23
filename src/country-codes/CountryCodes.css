@@ -1,7 +1,16 @@
-.buttonA {
-  background-color: #46139f
+#buttonA {
+  background-color: #46139f;
 }
 
-.buttonB {
-  background-color: #ff7f50
+#buttonB {
+  background-color: #ff7f50;
+}
+
+#CountryCodes-segment {
+  padding: 5em 0em;
+  text-align: center;
+}
+
+#CountryCodes-header2 {
+  margin-bottom: 1em;
 }

@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { Container, Segment, Header, Button } from "semantic-ui-react";
 import "./Homepage.css";
 import UserContext from "../auth/UserContext";
 
@@ -14,31 +15,38 @@ import UserContext from "../auth/UserContext";
 
 function Homepage() {
   const { currentUser } = useContext(UserContext);
-  console.debug("Homepage", "currentUser=", currentUser);
+
+  const history = useHistory();
+
+  function routeToLogin() {
+    history.push("/login");
+  }
+
+  function routeToSignup() {
+    history.push("/signup");
+  }
 
   return (
-      <div className="Homepage">
-        <div className="container text-center">
-          <h1 className="mb-4 font-weight-bold">Country Codes</h1>
-          <p className="lead">All the country codes in one, convenient place.</p>
-          {currentUser
-              ? <h2>
-                Welcome Back, {currentUser.firstName || currentUser.username}!
-              </h2>
-              : (
-                  <p>
-                    <Link className="btn btn-primary font-weight-bold mr-3"
-                          to="/login">
-                      Log in
-                    </Link>
-                    <Link className="btn btn-primary font-weight-bold"
-                          to="/signup">
-                      Sign up
-                    </Link>
-                  </p>
-              )}
-        </div>
-      </div>
+    <Segment id="homepage-segment" vertical>
+      <Container text>
+        <Header id="homepage-header1" as="h3">Country Codes</Header>
+        <p className="lead">All the country codes in one, convenient place.</p>
+        {currentUser
+            ? <h2>
+              Welcome Back, {currentUser.firstName || currentUser.username}!
+            </h2>
+            : (
+                <p>
+                  <Button basic color="black" onClick={routeToLogin}>
+                    Log in
+                  </Button>
+                  <Button basic color="blue" onClick={routeToSignup}>
+                    Sign up
+                  </Button>
+                </p>
+            )}
+      </Container>
+    </Segment>
   );
 }
 

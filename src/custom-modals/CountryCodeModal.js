@@ -1,14 +1,13 @@
 import "./CountryCodeModal.css"
 import React, { useState, useEffect } from "react";
-import Modal from 'react-modal';
 import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 import CountryList from "../country-codes/CountryList.js";
 import LoadingSpinner from "../common/LoadingSpinner.js";
 import CountryDetailModal from "./CountryDetailModal.js";
+import { Modal, Container, Button, Divider } from "semantic-ui-react";
 
 // binding modal to appElement for screen readers
-if (process.env.NODE_ENV !== "test") Modal.setAppElement('#root');
 
 const countryCodeAPI = "https://restcountries.eu/rest/v2"
 
@@ -215,7 +214,8 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
 
 
   return (
-    <div className="modal-container" data-testid="modal-container" >
+    <Container>
+
       {codeToGetDetail && 
         <CountryDetailModal 
           code={codeToGetDetail}
@@ -223,53 +223,64 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
         />
       }
       <Modal
-        isOpen={isOpen}
-        className="modal"
-        onRequestClose={closeModals}
+        open={isOpen}
+        onClose={closeModals}
       >
         <div className={"country-code-modal-" + urlParam.modal} >
-          <h2>Modal {urlParam.modal?.toUpperCase()}</h2>
+          <Modal.Header 
+            id="country-code-modal-header"
+            as="h2"
+          > Modal {urlParam.modal?.toUpperCase()}
+          </Modal.Header>
 
-          <button 
-            onClick={openModalA} 
-            className="buttonA" 
-            data-testid="modal-button-a" 
-          >All country codes</button>
-          <button 
-            onClick={openModalB} 
-            className="buttonB" 
-            data-testid="modal-button-b" 
-          >Favorite country codes</button>
-          <button 
-            onClick={closeModals} 
-            className="buttonC"
-            data-testid="modal-button-close" 
-          >Close</button>
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label>Only Even</label>
-              <input
-                name="onlyEven"
-                type="checkbox"
-                checked={isOnlyEven}
-                onChange={handleCheckboxChange}
-              />
-            </div>
-            <div>
-              <label>Filter Results</label>
-              <input
-                name="filterResults"
-                className="form-control"
-                value={formData.filterResults}
-                onChange={handleSearchboxChange}
-              />
-            </div>
-          </form>
-          {displayCountryCodes()}
-          {infoLoaded && <i>( You've reached the end of the list! )</i>}
+          <Container id="country-code-modal-button-container">
+            <Button 
+              onClick={openModalA} 
+              className="buttonA" 
+              data-testid="modal-button-a"
+              color="purple"
+            >All country codes</Button>
+            <Button 
+              onClick={openModalB} 
+              className="buttonB" 
+              data-testid="modal-button-b"
+              color="orange"
+            >Favorite country codes</Button>
+            <Button 
+              onClick={closeModals} 
+              className="buttonC"
+              data-testid="modal-button-close"
+              color="grey"
+            >Close</Button>
+          </Container>
+          <Divider />
+          <Container id="country-code-modal-form-container">
+            <form id="country-code-modal-form" onSubmit={handleSubmit}>
+              <div>
+                <label>Filter Results</label>
+                <input
+                  name="filterResults"
+                  className="form-control"
+                  value={formData.filterResults}
+                  onChange={handleSearchboxChange}
+                />
+              </div>
+              <div>
+                <label>Only Even</label>
+                <input
+                  name="onlyEven"
+                  type="checkbox"
+                  checked={isOnlyEven}
+                  onChange={handleCheckboxChange}
+                />
+              </div>
+            </form>
+            {displayCountryCodes()}
+            {infoLoaded && <i>( You've reached the end of the list! )</i>}
+          </Container>
         </div>
       </Modal>
-    </div>
+    </Container>
   );
 }
 

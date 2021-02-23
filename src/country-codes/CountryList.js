@@ -3,6 +3,7 @@ import nopsTaskApi from "../api/api";
 import UserContext from "../auth/UserContext";
 import { useParams } from "react-router-dom";
 import LoadingSpinner from "../common/LoadingSpinner.js";
+import { Button, Container, List } from "semantic-ui-react";
 
 /** CountryList
  * 
@@ -138,32 +139,34 @@ function CountryList({
       return codesToRender.map((code, index) => {
         if ((index + 1) === loadedIndex) {
           return (
-            <li key={code} ref={lastCodeElementRef} >
-              {userFavoriteCodes.includes(code) && 
-                <i 
-                  className="fas fa-star"
-                  onClick={handleRemoveFavoriteCode}
+            <div ref={lastCodeElementRef}>
+              <List.Item key={code}>
+                {userFavoriteCodes.includes(code) && 
+                  <i 
+                    className="fas fa-star"
+                    onClick={handleRemoveFavoriteCode}
+                    name={code}
+                  />}
+                {!userFavoriteCodes.includes(code) && 
+                  <i 
+                    className="far fa-star"
+                    onClick={handleAddFavoriteCode}
+                    name={code}
+                  />}
+                <Button
                   name={code}
-                />}
-              {!userFavoriteCodes.includes(code) && 
-                <i 
-                  className="far fa-star"
-                  onClick={handleAddFavoriteCode}
-                  name={code}
-                />}
-              <button
-                type="button"
-                className="btn btn-link"
-                name={code}
-                onClick={handleSetCodeForDetail}
-              >
-                {code}
-              </button>
-            </li> 
+                  onClick={handleSetCodeForDetail}
+                  size="tiny"
+                  color="black"
+                >
+                  {code}
+                </Button>
+              </List.Item>
+            </div>
           )
         } else {
           return (
-            <li key={code} >
+            <List.Item key={code}>
               {userFavoriteCodes.includes(code) && 
                 <i 
                   className="fas fa-star"
@@ -176,15 +179,15 @@ function CountryList({
                   onClick={handleAddFavoriteCode}
                   name={code}
                 />}
-              <button
-                type="button"
-                className="btn btn-link"
+              <Button
                 name={code}
                 onClick={handleSetCodeForDetail}
+                size="tiny"
+                color="black"
               >
                 {code}
-              </button>
-            </li> 
+              </Button>
+            </List.Item>
           )
         }
       }
@@ -195,11 +198,11 @@ function CountryList({
   }
 
   return (
-    <div>
-      <ul data-testid="country-list">
+    <Container>
+      <List>
         {renderCodes()}
-      </ul>
-    </div>
+      </List>
+    </Container>
   );
 }
 
