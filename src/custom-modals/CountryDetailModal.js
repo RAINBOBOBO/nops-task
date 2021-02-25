@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "../common/LoadingSpinner.js";
 import axios from "axios";
-import { Modal } from "semantic-ui-react";
+import { Button, Header, Image, Modal } from 'semantic-ui-react'
 
 
 /** CountryDetailModal
@@ -49,20 +49,23 @@ function CountryDetailModal({ code, setCode }) {
   }
 
   return (
-    <div>
-      <Modal
-        open={isOpen}
-        name="country-code-detail-modal"
-        className="detail-modal"
-        onClose={closeModals}
-      >
-        <h2>Modal C: Details on {code}</h2>
-        <button onClick={closeModals}>Close</button>
+    <Modal
+      open={isOpen}
+      name="country-code-detail-modal"
+      className="detail-modal"
+      onClose={closeModals}
+      dimmer="blurring"
+    >
+      <Modal.Header>Modal C: Details on {code}</Modal.Header>
+      <Modal.Content image>
         {infoLoaded && 
-          <div>
-            <p>
+          <Image src={codeDetail.flag} alt="flag" size="large" wrapped/>
+        }
+        {infoLoaded && 
+          <Modal.Description>
+            <Header>
               Country Name: {codeDetail.name}
-            </p>
+            </Header>
             <p>
               Capital: {codeDetail.capital}
             </p>
@@ -95,15 +98,14 @@ function CountryDetailModal({ code, setCode }) {
                 </ul>
               </div>
             }
-            Flag:
-            <div>
-              <img src={codeDetail.flag} alt="flag" width="200" />
-            </div>
-          </div>
+          </Modal.Description>
         }
         {!infoLoaded && <LoadingSpinner />}
-      </Modal>
-    </div>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button color="black" onClick={closeModals}>Close</Button>
+      </Modal.Actions>
+    </Modal>
   );
 }
 

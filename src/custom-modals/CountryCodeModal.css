@@ -31,3 +31,19 @@
   margin: 0 auto;
   width: 20em;
 }
+
+#country-code-modal-form-segment-a {
+  background-color: #46139f;
+}
+
+#country-code-modal-form-segment-b {
+  background-color: #ff7f50;
+}
+
+#country-code-list-segment-a {
+  background-color: #46139f;
+}
+
+#country-code-list-segment-b {
+  background-color: #ff7f50;
+}

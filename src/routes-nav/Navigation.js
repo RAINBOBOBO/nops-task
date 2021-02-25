@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Segment, Menu, Container } from 'semantic-ui-react';
 import UserContext from "../auth/UserContext";
-import CountryCodes from "../country-codes/CountryCodes";
 import "./Navigation.css";
 
 /** Navigation bar for site. Shows up on every page.
@@ -56,6 +55,11 @@ function Navigation({ logout }) {
           inverted
         >
           <Container>
+            <Menu.Item>
+              <Link className="navbar-home" to="/">
+                Home
+              </Link>
+            </Menu.Item>
             <Menu.Item>
               <Link className="navbar-brand" to="/codes">
                 Country Codes

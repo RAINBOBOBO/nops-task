@@ -5,7 +5,7 @@ import axios from "axios";
 import CountryList from "../country-codes/CountryList.js";
 import LoadingSpinner from "../common/LoadingSpinner.js";
 import CountryDetailModal from "./CountryDetailModal.js";
-import { Modal, Container, Button, Divider } from "semantic-ui-react";
+import { Modal, Container, Button, Divider, Form, Segment, Header } from "semantic-ui-react";
 
 // binding modal to appElement for screen readers
 
@@ -230,7 +230,9 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
           <Modal.Header 
             id="country-code-modal-header"
             as="h2"
-          > Modal {urlParam.modal?.toUpperCase()}
+          > 
+            Modal {urlParam.modal?.toUpperCase()}: 
+             {urlParam.modal === "a" ? " All Codes" : " Favorite Codes"}
           </Modal.Header>
 
           <Container id="country-code-modal-button-container">
@@ -250,34 +252,43 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
               onClick={closeModals} 
               className="buttonC"
               data-testid="modal-button-close"
-              color="grey"
-            >Close</Button>
+              color="black"
+            >
+              Close
+            </Button>
           </Container>
           <Divider />
-          <Container id="country-code-modal-form-container">
-            <form id="country-code-modal-form" onSubmit={handleSubmit}>
-              <div>
-                <label>Filter Results</label>
-                <input
-                  name="filterResults"
-                  className="form-control"
-                  value={formData.filterResults}
-                  onChange={handleSearchboxChange}
-                />
-              </div>
-              <div>
-                <label>Only Even</label>
-                <input
+          <Segment basic padded="very" id={"country-code-modal-form-segment-" + urlParam.modal}>
+            <Header>
+              Filter codes
+            </Header>
+            <Divider />
+            <Form onSubmit={handleSubmit}>
+              <Form.Group>
+                <Form.Field width={4}>
+                  <label>Search by code</label>
+                  <input
+                    name="filterResults"
+                    className="form-control"
+                    value={formData.filterResults}
+                    onChange={handleSearchboxChange}
+                  />
+                </Form.Field>
+              </Form.Group>
+              <Form.Group>
+                <Form.Checkbox 
+                  label="Only Even"
                   name="onlyEven"
-                  type="checkbox"
-                  checked={isOnlyEven}
                   onChange={handleCheckboxChange}
                 />
-              </div>
-            </form>
+              </Form.Group>
+            </Form>
+          </Segment>
+          <Segment padded="very" id={"country-code-list-segment-" + urlParam.modal}>
             {displayCountryCodes()}
+            <Divider />
             {infoLoaded && <i>( You've reached the end of the list! )</i>}
-          </Container>
+          </Segment>
         </div>
       </Modal>
     </Container>

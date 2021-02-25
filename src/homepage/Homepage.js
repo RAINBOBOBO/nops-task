@@ -29,8 +29,8 @@ function Homepage() {
   return (
     <Segment id="homepage-segment" vertical>
       <Container text>
-        <Header id="homepage-header1" as="h3">Country Codes</Header>
-        <p className="lead">All the country codes in one, convenient place.</p>
+        <Header id="homepage-header1" as="h3">The Code Zone</Header>
+        <p className="lead">All the country codes in one convenient place.</p>
         {currentUser
             ? <h2>
               Welcome Back, {currentUser.firstName || currentUser.username}!
