@@ -1,0 +1,11 @@
+#signup-form-segment {
+  text-align: center;
+  display: block;
+  padding-top: 13em;
+}
+
+#signup-form {
+  display: inline-block;
+  text-align: left;
+  width: 25em;
+}

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Alert from "../common/Alert";
-import { Segment, Button, Header, Form } from 'semantic-ui-react';
+import { Segment, Button, Header, Form, Container } from 'semantic-ui-react';
+import './LoginForm.css';
 
 /** Login form.
  *
@@ -51,11 +52,12 @@ function LoginForm({ login }) {
   }
 
   return (
-    <Segment padded="very">
+    <Segment id="login-form-segment" vertical padded="very">
       <Header as="h1">Log In</Header>
-        <Form onSubmit={handleSubmit}>
+      <Container id="login-form-container">
+        <Form id="login-form" onSubmit={handleSubmit}>
           <Form.Group>
-            <Form.Field width={3}>
+            <Form.Field width={16}>
               <label>Username</label>
               <input
                   name="username"
@@ -68,7 +70,7 @@ function LoginForm({ login }) {
             </Form.Field>
           </Form.Group>
           <Form.Group>
-            <Form.Field width={3}>
+            <Form.Field width={16}>
               <label>Password</label>
               <input
                   type="password"
@@ -90,10 +92,13 @@ function LoginForm({ login }) {
               className="btn btn-primary float-right"
               onSubmit={handleSubmit}
               color="green"
+              fluid
+              size="small"
           >
             Submit
           </Button>
         </Form>
+      </Container>
     </Segment>
   );
 }

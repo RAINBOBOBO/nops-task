@@ -1,0 +1,11 @@
+#login-form-segment {
+  text-align: center;
+  display: block;
+  padding-top: 13em;
+}
+
+#login-form {
+  display: inline-block;
+  text-align: left;
+  width: 25em;
+}

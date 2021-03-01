@@ -240,7 +240,7 @@ function CountryCodeModal({ addFavoriteCode, removeFavoriteCode }) {
               onClick={openModalA} 
               className="buttonA" 
               data-testid="modal-button-a"
-              color="purple"
+              color="violet"
             >All country codes</Button>
             <Button 
               onClick={openModalB} 

@@ -37,7 +37,7 @@ function CountryCodes() {
       <Container text>
         <Button
           basic
-          color='purple'
+          color='violet'
           onClick={openModalA}
           data-testid="button-a"
         >

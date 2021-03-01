@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Alert from "../common/Alert";
-import { Segment, Button, Header, Form } from 'semantic-ui-react';
+import { Segment, Button, Header, Form, Container } from 'semantic-ui-react';
+import "./SignupForm.css"
+import { GoogleLogin } from 'react-google-login';
 
 /** Signup form.
  *
@@ -54,75 +56,86 @@ function SignupForm({ signup }) {
   }
 
   return (
-    <Segment padded="very">
+    <Segment id="signup-form-segment" vertical padded="very">
       <Header as="h1">Sign Up</Header>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group>
-          <Form.Field width={3}>
-            <label>First name</label>
-            <input
-                name="firstName"
-                className="form-control"
-                value={formData.firstName}
-                onChange={handleChange}
-            />
-          </Form.Field>
-          <Form.Field width={3}>
-            <label>Last name</label>
-            <input
-                name="lastName"
-                className="form-control"
-                value={formData.lastName}
-                onChange={handleChange}
-            />
-          </Form.Field>
-        </Form.Group>
-        <Form.Group>
-          <Form.Field width={3}>
-            <label>Email</label>
-            <input
-                type="email"
-                name="email"
-                className="form-control"
-                value={formData.email}
-                onChange={handleChange}
-            />
-          </Form.Field>
-          <Form.Field width={2}>
-            <label>Username</label>
-            <input
-                name="username"
-                className="form-control"
-                value={formData.username}
-                onChange={handleChange}
-            />
-          </Form.Field>
-          <Form.Field width={2}>
-            <label>Password</label>
-            <input
-                type="password"
-                name="password"
-                className="form-control"
-                value={formData.password}
-                onChange={handleChange}
-            />
-          </Form.Field>
-        </Form.Group>
+      <Container id="signup-form-container">
+        <Form id="signup-form" onSubmit={handleSubmit}>
+          <Form.Group>
+            <Form.Field width={16}>
+              <label>First name</label>
+              <input
+                  name="firstName"
+                  className="form-control"
+                  value={formData.firstName}
+                  onChange={handleChange}
+              />
+            </Form.Field>
+          </Form.Group>
+          <Form.Group>
+            <Form.Field width={16}>
+              <label>Last name</label>
+              <input
+                  name="lastName"
+                  className="form-control"
+                  value={formData.lastName}
+                  onChange={handleChange}
+              />
+            </Form.Field>
+          </Form.Group>
+          <Form.Group>
+            <Form.Field width={16}>
+              <label>Email</label>
+              <input
+                  type="email"
+                  name="email"
+                  className="form-control"
+                  value={formData.email}
+                  onChange={handleChange}
+              />
+            </Form.Field>
+          </Form.Group>
+          <Form.Group>
+            <Form.Field width={16}>
+              <label>Username</label>
+              <input
+                  name="username"
+                  className="form-control"
+                  value={formData.username}
+                  onChange={handleChange}
+              />
+            </Form.Field>
+          </Form.Group>
+          <Form.Group>
+            <Form.Field width={16}>
+              <label>Password</label>
+              <input
+                  type="password"
+                  name="password"
+                  className="form-control"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="At least 5 characters"
+              />
+            </Form.Field>
+          </Form.Group>
 
-        {formErrors.length
-            ? <Alert type="danger" messages={formErrors} />
-            : null
-        }
+          {formErrors.length
+              ? <Alert type="danger" messages={formErrors} />
+              : null
+          }
 
-        <Button
-            type="submit"
-            className="btn btn-primary float-right"
-            onSubmit={handleSubmit}
-            color="green"
-        >
-          Submit
-        </Button>
-      </Form>
+          <Button
+              type="submit"
+              className="btn btn-primary float-right"
+              onSubmit={handleSubmit}
+              color="green"
+              fluid
+              size="small"
+          >
+            Submit
+          </Button>
+        </Form>
+      </Container>
     </Segment>
   );
 }
