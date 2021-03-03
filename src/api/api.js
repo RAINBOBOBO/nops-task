@@ -55,6 +55,13 @@ class nopsTaskApi {
     return res.token;
   }
 
+  /** Login with google */
+
+  static async googleLogin(data) {
+    let res = await this.request(`auth/google`, data, "post");
+    return res.token;
+  }
+
   /** Get all favorites for a user */
 
   static async getFavorites(username) {

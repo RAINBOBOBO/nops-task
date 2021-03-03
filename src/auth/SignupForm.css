@@ -9,3 +9,7 @@
   text-align: left;
   width: 25em;
 }
+
+#google-login-button {
+  padding-top: 1em;
+}

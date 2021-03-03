@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Alert from "../common/Alert";
 import { Segment, Button, Header, Form, Container } from 'semantic-ui-react';
-import "./SignupForm.css"
+import "./SignupForm.css";
 import { GoogleLogin } from 'react-google-login';
 
 /** Signup form.
@@ -53,6 +53,10 @@ function SignupForm({ signup }) {
   function handleChange(evt) {
     const { name, value } = evt.target;
     setFormData(data => ({ ...data, [name]: value }));
+  }
+
+  function handleLogin() {
+    return;
   }
 
   return (
@@ -126,7 +130,6 @@ function SignupForm({ signup }) {
 
           <Button
               type="submit"
-              className="btn btn-primary float-right"
               onSubmit={handleSubmit}
               color="green"
               fluid
@@ -135,6 +138,15 @@ function SignupForm({ signup }) {
             Submit
           </Button>
         </Form>
+      </Container>
+      <Container id="google-login-button">
+        <GoogleLogin
+          clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+          buttonText="Log in with Google"
+          onSuccess={handleLogin}
+          onFailure={handleLogin}
+          cookiePolicy={'single_host_origin'}
+        />
       </Container>
     </Segment>
   );
